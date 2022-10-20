@@ -17,27 +17,27 @@ public class readExcel {
 	File excel = new File("/Users/saadalali/Desktop/SWE316/Samples/Projects.xls"); //projects file
 	String[] projectsArray= new String[5]; //array of 1 project with basic info
 	
-	public String[] objectsMaker() throws IOException { //read from Excel file
+	public ArrayList<projects> objectsMaker() throws IOException { //read from Excel file
 		FileInputStream fis = new FileInputStream(excel); 
 		
-		HSSFWorkbook hwb = new HSSFWorkbook(fis);  //for .xls files
-		HSSFSheet sheet1 = hwb.getSheetAt(0); //which excel sheet
+		HSSFWorkbook hwb = new HSSFWorkbook(fis);  //used for .xls files
+		HSSFSheet sheet1 = hwb.getSheetAt(0); //specify excel sheet
 		
-		int rowNum = sheet1.getLastRowNum(); //number of rows in the excel sheet
+		int rowNum = sheet1.getLastRowNum(); //number of rows in the sheet
 				
-for(int i=1; i<rowNum+1; i++) { //row loop (i=0 means row 1 in excel which is the header)
+		for(int i=1; i<rowNum+1; i++) { //row loop (i=0 means row 1 in excel which is the header)
 			
 			String NodeID = "";
 			String ProjectID = "";
-			double Stage = 0;
-			double StartDate = 0;
-			double EndDate =0;
+			int Stage = 0;
+			Date StartDate = null;
+			Date EndDate = null;
 			
-			Cell NodeIDCell = sheet1.getRow(i).getCell(0); //specify the row and column
-			Cell ProjectIDCell = sheet1.getRow(i).getCell(1);//specify the row and column
-			Cell StageCell = sheet1.getRow(i).getCell(2);//specify the row and column
-			Cell StartDateCell = sheet1.getRow(i).getCell(3);//specify the row and column
-			Cell EndDateCell = sheet1.getRow(i).getCell(4);//specify the row and the column
+			Cell NodeIDCell = sheet1.getRow(i).getCell(0);
+			Cell ProjectIDCell = sheet1.getRow(i).getCell(1);
+			Cell StageCell = sheet1.getRow(i).getCell(2);
+			Cell StartDateCell = sheet1.getRow(i).getCell(3);
+			Cell EndDateCell = sheet1.getRow(i).getCell(4);
 			
 			if(NodeIDCell == null) {
 			} else {NodeID = NodeIDCell.getStringCellValue();}
@@ -46,19 +46,20 @@ for(int i=1; i<rowNum+1; i++) { //row loop (i=0 means row 1 in excel which is th
 			} else {ProjectID = ProjectIDCell.getStringCellValue();}
 			
 			if(StageCell == null) {
-			} else {Stage = StageCell.getNumericCellValue();}
+			} 	
+			else {Stage = (int) StageCell.getNumericCellValue();}
 			
 			if(StartDateCell == null) {
-			} else {StartDate = StartDateCell.getNumericCellValue();}
+			} else {StartDate = StartDateCell.getDateCellValue();}
 			
 			if(EndDateCell == null) {
-			} else {EndDate =EndDateCell.getNumericCellValue();}
-
-		    projectsArr.add(new projects(NodeID, ProjectID, Stage, StartDate, EndDate));
+			} else {EndDate =EndDateCell.getDateCellValue();}
+			
+			projectsArr.add(new projects(NodeID, ProjectID, Stage, StartDate, EndDate));
 
 		}
 		hwb.close();
-		return null;
+		return projectsArr;
 		
 	}
 
